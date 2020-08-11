@@ -1,5 +1,5 @@
 
-### removing the remote origin on the repository
+## removing the remote origin on the repository
 
     We want to remove the remote and add our own remote, thus we can point it to our own repository
     ```commandline
@@ -24,7 +24,7 @@
     git push -u orgin master
     ```
 
-### Continuous Integration With Jenkins
+## Continuous Integration With Jenkins
 
 - The first Jenkins job will listen to any pushes that are made to a dev branch on our github repository, this is made
 possible due to the addition of webhooks that will constantly listen to any requests
@@ -36,16 +36,22 @@ code will be will merged into the master branch
 
 
 
-### Continuous Delivery With Jenkins
+## Continuous Deployment With Jenkins
 
 - The second Jenkins will only run providing the first has built successfully, this was done by adding this configuration
 
 ![](images/Build-only-if-CI-completes.jpg)
 
-- We need to open port 22 for jenkins
+- Thus once the CI job has been completed, the role of the Continuous deployment job is to then take the new code and deploy
+live on a web server through accessing our AMI's 
+
+- Once this job has completed, we should be able to see the changes we have made appear on a web browser
+
+- Commands that have been done in the Execute shell shows how Jenkins would automatically enter our instance and run the
+app post changes, acting similarly to our own ``` setup.sh ``` bash script
 
 
-Inside the execute shell we add the following commands to 
+Inside the execute shell we add the following commands: 
 
 ```commandline
 # '-r' stands for recursive, this tells scp to recursively copy the source directory and its contents
@@ -59,6 +65,13 @@ ssh -o "StrictHostKeyChecking=no" ubuntu@54.247.55.44 <<EOF
     
 EOF
 ```
+
+### All the configurations needed for this job can be seen here
+
+![](images/)
+
+
+- We need to open port 22 for jenkins
 
 After this must then add a ssh port 22 connection, we are using 0,0,0,0 because this means we are allowing everyone in,
 including the jenkins folder that we are working with
