@@ -32,13 +32,16 @@ possible due to the addition of webhooks that will constantly listen to any requ
 - Once a push has been made, the Continuous integration job will try to build the code, test it and providing this passes, the
 code will be will merged into the master branch
 
+For this configuration the '*' works as a placeholder, this means that as long as the branch starts with 'dev' then it
+will listen to these branches
+
 ![CI Configurations GIF](images/CI-Configuration-job.gif)
 
 
 
 ## Continuous Deployment With Jenkins
 
-- The second Jenkins will only run providing the first has built successfully, this was done by adding this configuration
+- The second Jenkins job will only run providing the first has built successfully, this was done by adding this configuration
 
 ![](images/Build-only-if-CI-completes.jpg)
 
@@ -86,18 +89,13 @@ EOF
 - In order for the Jenkins Agent to interact with our AMI, we must also allow it in our inbound rules of our APP instance
 which can be done in the security groups section
 
+![](images/Inbound-Access-SSH.png)
+
+- Here we have added an SSH port 22 connection, we are using 0.0.0.0 because this means we are allowing everyone in,
+including the jenkins server that we are working with
+
+Once this has been completed we can now make a change on one of our dev branches and hope to see these changes take place
+live
 
 
-- We need to open port 22 for jenkins
 
-After this must then add a ssh port 22 connection, we are using 0,0,0,0 because this means we are allowing everyone in,
-including the jenkins folder that we are working with
-
-![](images/adding-port22-inbound.png)
-
-
-
-For this configuration the '*' works as a placeholder, this means that as long as the branch starts with 'dev' then it
-will listen to these branches
-
-![](images/placeholder-for-branches.png)
