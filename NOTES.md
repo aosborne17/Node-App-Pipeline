@@ -45,7 +45,11 @@ code will be will merged into the master branch
 - Thus once the CI job has been completed, the role of the Continuous deployment job is to then take the new code and deploy
 live on a web server through accessing our AMI's 
 
-- Once this job has completed, we should be able to see the changes we have made appear on a web browser
+- In order for our Jenkins Agent to access our AMI, we will need to provide it with an SSH agent that is also recognised
+by the AMI, otherwise we would not be able to enter
+
+![SSH-Agent](images/SSH-Agent.png)
+
 
 - Commands that have been done in the Execute shell shows how Jenkins would automatically enter our instance and run the
 app post changes, acting similarly to our own ``` setup.sh ``` bash script
@@ -57,18 +61,31 @@ Inside the execute shell we add the following commands:
 # '-r' stands for recursive, this tells scp to recursively copy the source directory and its contents
 scp -o "StrictHostKeyChecking=no" -r app ubuntu@54.247.55.44:/home/ubuntu
 scp -o "StrictHostKeyChecking=no" -r environment ubuntu@54.247.55.44:/home/ubuntu
-ssh -o "StrictHostKeyChecking=no" ubuntu@54.247.55.44 <<EOF	
+ssh -o "StrictHostKeyChecking=no" ubuntu@54.247.55.44 <<EOF
+    # Here we are running our provision.sh which will download all the dependencies necessary to run our app	
     sudo bash ./environment/app/provision.sh
+    # Now we can cd into our app folder
     cd app
+    # Kill any apps that are currently running
     pm2 kill
+    # Then run our application
     pm2 start app.js
     
 EOF
 ```
 
+- Once this job has completed, we should be able to see the changes we have made appear on a web browser
+
 ### All the configurations needed for this job can be seen here
 
-![](images/)
+![](images/CD-Configuration-job.gif)
+
+
+## Allowing Inbound Access from Jenkins Server To our AMI
+
+- In order for the Jenkins Agent to interact with our AMI, we must also allow it in our inbound rules of our APP instance
+which can be done in the security groups section
+
 
 
 - We need to open port 22 for jenkins
